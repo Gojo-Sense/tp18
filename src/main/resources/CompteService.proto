@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+// Package definition for generated Java classes
+option java_package = "ma.project.grpc.stubs";
+option java_multiple_files = true;
+
+// Enumeration defining account types
+enum TypeCompte {
+  COURANT = 0;  // Checking account
+  EPARGNE = 1;  // Savings account
+}
+
+// Message representing a bank account
+message Compte {
+  string id = 1;              // Unique identifier
+  float solde = 2;            // Account balance
+  string dateCreation = 3;    // Creation date
+  TypeCompte type = 4;        // Account type
+}
+
+// Request message for creating/updating an account
+message CompteRequest {
+  float solde = 1;
+  string dateCreation = 2;
+  TypeCompte type = 3;
+}
+
+// Statistics message for balance calculations
+message SoldeStats {
+  int32 count = 1;      // Total number of accounts
+  float sum = 2;        // Sum of all balances
+  float average = 3;    // Average balance
+}
+
+// Request to retrieve all accounts
+message GetAllComptesRequest {}
+
+// Response containing list of accounts
+message GetAllComptesResponse {
+  repeated Compte comptes = 1;
+}
+
+// Request to retrieve account by identifier
+message GetCompteByIdRequest {
+  string id = 1;
+}
+
+// Response containing requested account
+message GetCompteByIdResponse {
+  Compte compte = 1;
+}
+
+// Request to retrieve balance statistics
+message GetTotalSoldeRequest {}
+
+// Response containing balance statistics
+message GetTotalSoldeResponse {
+  SoldeStats stats = 1;
+}
+
+// Request to save (create or update) an account
+message SaveCompteRequest {
+  CompteRequest compte = 1;
+}
+
+// Response containing saved account
+message SaveCompteResponse {
+  Compte compte = 1;
+}
+
+// Service definition for bank account operations
+service CompteService {
+  // Retrieves all accounts from the system
+  rpc AllComptes(GetAllComptesRequest) returns (GetAllComptesResponse);
+
+  // Retrieves a specific account by its ID
+  rpc CompteById(GetCompteByIdRequest) returns (GetCompteByIdResponse);
+
+  // Calculates and returns balance statistics
+  rpc TotalSolde(GetTotalSoldeRequest) returns (GetTotalSoldeResponse);
+
+  // Creates or updates an account
+  rpc SaveCompte(SaveCompteRequest) returns (SaveCompteResponse);
+}
